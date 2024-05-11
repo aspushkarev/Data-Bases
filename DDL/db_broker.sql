@@ -2,6 +2,9 @@ CREATE DATABASE db_broker;
 
 CREATE SCHEMA IF NOT EXISTS broker_schema;
 
+SELECT spcname FROM pg_tablespace;
+CREATE TABLESPACE broker_space OWNER alexander LOCATION '/Users/alexander/docs/psql/data';
+
 CREATE USER alexander WITH PASSWORD 'alexander';
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA broker_schema TO "alexander"; 
 ALTER DEFAULT PRIVILEGES GRANT SELECT ON TABLES TO alexander;
@@ -19,7 +22,7 @@ CREATE TABLE broker_schema.users (
 	citizenship VARCHAR(30) NOT NULL,
 	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+) TABLESPACE broker_space;
 
 INSERT INTO broker_schema.users 
 VALUES (DEFAULT, 'Рустем', 'Флюрович', 'Габдрашитов', '1984-11-03', 'мужской', 'Россия', DEFAULT, DEFAULT),
@@ -37,7 +40,7 @@ CREATE TABLE broker_schema.invest_profiles (
 	id SERIAL PRIMARY KEY,
 	name_profile VARCHAR(50) NOT NULL UNIQUE,
 	description TEXT NOT NULL
-);
+) TABLESPACE broker_space;
 
 INSERT INTO broker_schema.invest_profiles (id, name_profile, description)
 VALUES (DEFAULT, 'Консервативный', 'Ваша цель - сохранение и защита капитала. Вы готовы размещать средства только в консервативные инструменты. Доходы предполагаются на уровне или чуть выше существующих процентных ставок по депозитам в соответствующей валюте. Однако доходность носит вероятностный характер, она скорее ожидаемая, чем гарантированная.'),
@@ -66,7 +69,7 @@ CREATE TABLE broker_schema.user_profiles (
 	qualifying_investor_status qualifying_investor_status NOT NULL DEFAULT 'FALSE',
 	FOREIGN KEY (user_id) REFERENCES broker_schema.users (id),
 	FOREIGN KEY (invest_profile_id) REFERENCES broker_schema.invest_profiles (id)
-);
+) TABLESPACE broker_space;
 
 INSERT INTO broker_schema.user_profiles 
 VALUES (DEFAULT, 1, 'asdf', '78bf69kgrejj7h3', '89039992799', 'psashok@mail.ru', '451361/21', DEFAULT, '451396', NULL, 4, 'FALSE'),
@@ -85,7 +88,7 @@ CREATE TABLE broker_schema.currencys (
 	symbol CHAR(1) NOT NULL,
 	abbreviation CHAR(3) NOT NULL,
 	description VARCHAR(20) NOT NULL
-);
+) TABLESPACE broker_space;
 
 INSERT INTO broker_schema.currencys 
 VALUES (DEFAULT, '$', 'USD', 'Американский доллар'),
@@ -105,7 +108,7 @@ CREATE TABLE broker_schema.bill_of_users (
 	currency_id INT,
 	FOREIGN KEY (user_id) REFERENCES broker_schema.users (id),
 	FOREIGN KEY (currency_id) REFERENCES broker_schema.currencys (id)
-);
+) TABLESPACE broker_space;
 
 INSERT INTO broker_schema.bill_of_users 
 VALUES (DEFAULT, 1, 150245, 2),
@@ -125,7 +128,7 @@ DROP TABLE IF EXISTS broker_schema.markets;
 CREATE TABLE broker_schema.markets (
 	id SERIAL PRIMARY KEY,
 	type_market VARCHAR(20) NOT NULL UNIQUE
-);
+) TABLESPACE broker_space;
 
 INSERT INTO broker_schema.markets (id, type_market)
 VALUES (DEFAULT, 'Российский'),
@@ -140,7 +143,7 @@ CREATE TABLE broker_schema.issuer (
 	market_id INT NOT NULL,
 	info_about_issuer TEXT NOT NULL,
 	FOREIGN KEY (market_id) REFERENCES broker_schema.markets (id)
-);
+) TABLESPACE broker_space;
 
 INSERT INTO broker_schema.issuer 
 VALUES (DEFAULT, 'AAPL','Apple', 125, 2, 'Apple — американская корпорация из Купертино, инновационный лидер рынка гаджетов. Работает в премиум-сегменте. Создатель iPhone, iPod, iPad, Apple Watch, Apple TV, хранилища iCloud, технологии бесконтактной оплаты Apple Pay и собственного программного обеспечения: операционных систем iOS и MacOS.'),
@@ -165,7 +168,7 @@ CREATE TABLE broker_schema.bounds (
 	profitability VARCHAR(5),
 	market_id INT NOT NULL,
 	FOREIGN KEY (market_id) REFERENCES broker_schema.markets (id)
-);
+) TABLESPACE broker_space;
 
 INSERT INTO broker_schema.bounds 
 VALUES (DEFAULT, 'SU26215RMFS2', 'ОФЗ-26215', 'Наименование: МинФин РФ, облигации федерального займа с постоянным купонным доходом, документарные именные, выпуск 26215', '2023-08-16', '8,11%', 1),
@@ -184,7 +187,7 @@ CREATE TABLE broker_schema.type_of_bids (
 	id SERIAL PRIMARY KEY,
 	types VARCHAR(15) NOT NULL UNIQUE,
 	description TEXT NOT NULL
-);
+) TABLESPACE broker_space;
 
 INSERT INTO broker_schema.type_of_bids 
 VALUES (DEFAULT, 'Лимитная', 'Купить не дороже указанной цены'),
@@ -212,7 +215,7 @@ CREATE TABLE broker_schema.deals (
 	FOREIGN KEY (type_of_bid_id) REFERENCES broker_schema.type_of_bids (id),
 	FOREIGN KEY (issuer_id) REFERENCES broker_schema.issuer (id),
 	FOREIGN KEY (currency_id) REFERENCES broker_schema.currencys (id)
-);
+) TABLESPACE broker_space;
 
 INSERT INTO broker_schema.deals
 VALUES (DEFAULT, 1, 2, 6, 'buy', 7, 125, 2, DEFAULT, DEFAULT),
@@ -229,6 +232,7 @@ VALUES (DEFAULT, 1, 2, 6, 'buy', 7, 125, 2, DEFAULT, DEFAULT),
 (DEFAULT, 8, 2, 2, 'sell', 77, 125, 2, DEFAULT, DEFAULT),
 (DEFAULT, 1, 4, 9, 'buy', 70, 22, 2, DEFAULT, DEFAULT),
 (DEFAULT, 9, 5, 2, 'buy', 42, 15, 2, DEFAULT, DEFAULT),
-(DEFAULT, 10, 3, 8, 'sell', 37, 34, 2, DEFAULT, DEFAULT),
+(DEFAULT, 1, 3, 8, 'sell', 37, 34, 2, DEFAULT, DEFAULT),
 (DEFAULT, 2, 2, 1, 'buy', 19, 58, 2, DEFAULT, DEFAULT);
 
+SET default_tablespace = broker_space;
