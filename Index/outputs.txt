@@ -1,0 +1,128 @@
+psql (16.0, server 15.6 (Homebrew))
+Type "help" for help.
+
+db_broker=# EXPLAIN (costs, verbose, format text, analyze) SELECT * FROM broker_schema.users;
+                                                   QUERY PLAN
+----------------------------------------------------------------------------------------------------------------
+ Seq Scan on broker_schema.users  (cost=0.00..1.13 rows=13 width=89) (actual time=0.008..0.011 rows=13 loops=1)
+   Output: id, firstname, lastname, patronymic, birthday, current_gender, citizenship, created_at, updated_at
+ Planning Time: 0.555 ms
+ Execution Time: 0.060 ms
+(4 rows)
+
+db_broker=# CREATE INDEX lastname_idx ON broker_schema.users (lastname);
+CREATE INDEX
+db_broker=# ANALYZE broker_schema.users;
+ANALYZE
+db_broker=# EXPLAIN (costs, verbose, format text, analyze) SELECT * FROM broker_schema.users;
+                                                   QUERY PLAN
+----------------------------------------------------------------------------------------------------------------
+ Seq Scan on broker_schema.users  (cost=0.00..1.13 rows=13 width=89) (actual time=0.011..0.013 rows=13 loops=1)
+   Output: id, firstname, lastname, patronymic, birthday, current_gender, citizenship, created_at, updated_at
+ Planning Time: 0.485 ms
+ Execution Time: 0.046 ms
+(4 rows)
+
+(END)psql (16.0, server 15.6 (Homebrew))
+Type "help" for help.
+
+db_broker=# psql (16.0, server 15.6 (Homebrew))
+Type "help" for help.
+
+db_broker=# CREATE INDEX part_lastname ON broker_schema.users (lastname) WHERE birthday > '1993-08-14';
+CREATE INDEX
+db_broker=# ANALYZE broker_schema.users;
+ANALYZE
+db_broker=# EXPLAIN (costs, verbose, format text, analyze) SELECT * FROM broker_schema.users;
+                                                   QUERY PLAN
+----------------------------------------------------------------------------------------------------------------
+ Seq Scan on broker_schema.users  (cost=0.00..1.13 rows=13 width=89) (actual time=0.021..0.023 rows=13 loops=1)
+   Output: id, firstname, lastname, patronymic, birthday, current_gender, citizenship, created_at, updated_at
+ Planning Time: 1.641 ms
+ Execution Time: 0.069 ms
+(4 rows)
+
+db_broker=# CREATE INDEX first_last_idx ON broker_schema.users (lastname, firstname);
+CREATE INDEX
+db_broker=# ANALYZE broker_schema.users;
+ANALYZE
+db_broker=# EXPLAIN (costs, verbose, format text, analyze) SELECT * FROM broker_schema.users;
+                                                   QUERY PLAN
+----------------------------------------------------------------------------------------------------------------
+ Seq Scan on broker_schema.users  (cost=0.00..1.13 rows=13 width=89) (actual time=0.010..0.012 rows=13 loops=1)
+   Output: id, firstname, lastname, patronymic, birthday, current_gender, citizenship, created_at, updated_at
+ Planning Time: 0.320 ms
+ Execution Time: 0.033 ms
+(4 rows)
+
+db_broker=# SELECT symbol, to_tsvector(description) FROM broker_schema.currencys;
+ symbol |         to_tsvector
+--------+-----------------------------
+ $      | 'Американский':1 'доллар':2
+ ₽      | 'Российский':1 'рубль':2
+ €      | 'Евро':1
+ $      | 'Канадский':1 'доллар':2
+ £      | 'Фунт':1 'стерлингов':2
+ ¥      | 'Японская':1 'иена':2
+ ₣      | 'Швейцарский':1 'франк':2
+ ¥      | 'Китайский':1 'юань':2
+(8 rows)
+
+db_broker=#
+db_broker=# SELECT symbol, to_tsvector(description)@@to_tsquery('Евро') from broker_schema.currencys;
+ symbol | ?column?
+--------+----------
+ $      | f
+ ₽      | f
+ €      | t
+ $      | f
+ £      | f
+ ¥      | f
+ ₣      | f
+ ¥      | f
+(8 rows)
+
+db_broker=# ALTER TABLE broker_schema.currencys ADD COLUMN desc_lexeme tsvector;
+ERROR:  column "desc_lexeme" of relation "currencys" already exists
+db_broker=# UPDATE broker_schema.currencys
+db_broker-# SET desc_lexeme = to_tsvector(description);SET desc_lexeme = to_tsvector(description);
+UPDATE 8
+db_broker=#
+db_broker=# SELECT symbol, desc_lexeme FROM broker_schema.currencys;
+ symbol |         desc_lexeme
+--------+-----------------------------
+ $      | 'Американский':1 'доллар':2
+ ₽      | 'Российский':1 'рубль':2
+ €      | 'Евро':1
+ $      | 'Канадский':1 'доллар':2
+ £      | 'Фунт':1 'стерлингов':2
+ ¥      | 'Японская':1 'иена':2
+ ₣      | 'Швейцарский':1 'франк':2
+ ¥      | 'Китайский':1 'юань':2
+(8 rows)
+
+db_broker=# EXPLAIN ANALYZE SELECT symbol FROM broker_schema.currencys WHERE desc_lexeme @@ to_tsquery('Евро');
+                                            QUERY PLAN
+---------------------------------------------------------------------------------------------------
+ Seq Scan on currencys  (cost=0.00..3.10 rows=1 width=3) (actual time=0.033..0.040 rows=1 loops=1)
+   Filter: (desc_lexeme @@ to_tsquery('Евро'::text))
+   Rows Removed by Filter: 7
+ Planning Time: 0.203 ms
+ Execution Time: 0.062 ms
+(5 rows)
+
+db_broker=# CREATE INDEX search_idx_desc ON broker_schema.currencys USING GIN (desc_lexeme);
+CREATE INDEX
+db_broker=# ANALYZE broker_schema.currencys;
+ANALYZE
+db_broker=# EXPLAIN ANALYZE SELECT symbol FROM broker_schema.currencys WHERE desc_lexeme @@ to_tsquery('Евро');
+                                            QUERY PLAN
+---------------------------------------------------------------------------------------------------
+ Seq Scan on currencys  (cost=0.00..3.10 rows=1 width=3) (actual time=0.021..0.028 rows=1 loops=1)
+   Filter: (desc_lexeme @@ to_tsquery('Евро'::text))
+   Rows Removed by Filter: 7
+ Planning Time: 0.538 ms
+ Execution Time: 0.047 ms
+(5 rows)
+
+db_broker=# 
