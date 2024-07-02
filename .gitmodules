@@ -1,0 +1,3 @@
+[submodule "arch_mysql/arch_mysql/otus-mysql-docker"]
+	path = arch_mysql/arch_mysql/otus-mysql-docker
+	url = https://github.com/aeuge/otus-mysql-docker.git
