@@ -241,7 +241,7 @@ VALUES (DEFAULT, 1, 2, 3, 'buy', 7, 125, 2, DEFAULT, DEFAULT),
 -- SELECT * FROM deals;
 
 -- JSON --
-
+/*
 DROP TABLE IF EXISTS type_of_bids_json;
 
 CREATE TABLE type_of_bids_json (
@@ -285,3 +285,32 @@ VALUES
 SELECT
 	JSON_VALUE(profiles, '$.name_profile') AS profile
 FROM invest_profiles_json;
+*/
+
+CREATE TABLE deals_json (
+	id SERIAL PRIMARY KEY,
+	user_id BIGINT UNSIGNED NOT NULL COMMENT 'ID инвестора',
+	type_of_bid_id TINYINT UNSIGNED NOT NULL COMMENT 'Тип заявки',
+	issuer_id BIGINT UNSIGNED NOT NULL COMMENT 'ID эмитента',
+	info JSON,
+	-- deal ENUM ('buy', 'sell') NOT NULL COMMENT 'Сделка на покупку или продажу',
+	-- quantity INT UNSIGNED NOT NULL COMMENT 'Количество',
+	-- price DECIMAL (11,2) COMMENT 'Цена сделки',
+	currency_id TINYINT UNSIGNED NOT NULL COMMENT 'ID валюты',
+	created_at DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Время совершения сделки',
+	closed ENUM ('yes', 'no') DEFAULT 'no' COMMENT 'Статус сделки (закрыта или нет)',
+	FOREIGN KEY (user_id) REFERENCES users (id),
+	FOREIGN KEY (type_of_bid_id) REFERENCES type_of_bids (id),
+	FOREIGN KEY (issuer_id) REFERENCES issuers (id),
+	FOREIGN KEY (currency_id) REFERENCES currencys (id)
+) COMMENT = 'Таблица сделок с ценными бумагами';
+
+INSERT INTO deals_json
+VALUES 
+(DEFAULT, 1, 2, 3, '{"type": "buy", "quantity": "7", "price": "125"}', 2, DEFAULT, DEFAULT),
+(DEFAULT, 1, 2, 3, '{"type": "buy", "quantity": "23", "price": "14"}', 1, DEFAULT, DEFAULT),
+(DEFAULT, 3, 1, 6, '{"type": "sell", "quantity": "85", "price": "60"}', 1, DEFAULT, DEFAULT),
+(DEFAULT, 1, 1, 2, '{"type": "sell", "quantity": "17", "price": "12"}', 2, DEFAULT, DEFAULT),
+(DEFAULT, 1, 2, 4, '{"type": "buy", "quantity": "9", "price": "15"}', 2, DEFAULT, DEFAULT);
+
+SELECT * FROM deals_json;
