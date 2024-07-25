@@ -238,79 +238,34 @@ VALUES (DEFAULT, 1, 2, 3, 'buy', 7, 125, 2, DEFAULT, DEFAULT),
 (DEFAULT, 9, 3, 8, 'sell', 37, 34, 2, DEFAULT, DEFAULT),
 (DEFAULT, 2, 2, 1, 'buy', 19, 58, 2, DEFAULT, DEFAULT);
 
--- SELECT * FROM deals;
+SELECT * FROM deals;
 
 -- JSON --
-/*
-DROP TABLE IF EXISTS type_of_bids_json;
 
-CREATE TABLE type_of_bids_json (
-	bids JSON
-) COMMENT = 'Таблица типов заявок в формате JSON';
-
-INSERT INTO type_of_bids_json
-	(bids)
-VALUES
-('{"name": "Лимитная", "description": "Купить не дороже указанной цены"}'),
-('{"name": "Рыночная", "description": "Купить по рыночной цене"}'),
-('{"name": "Стоп-лимит", "description": "Если цена вырастет до указанной, выставить лимитную заявку на покупку"}'),
-('{"name": "Тейк-профит", "description": "Если цена упадёт до указанной, выставить лимитную заявку на покупку"}'),
-('{"name": "Стоп-лосс", "description": "Если цена вырастет до указанной, купить по рыночной цене"}');
-
-SELECT 
-	bids->>'$.name' AS name
-FROM type_of_bids_json;
-
-SELECT 
-	JSON_VALUE(bids, '$.description') AS description
-FROM type_of_bids_json;
-
-DROP TABLE IF EXISTS invest_profiles_json;
-
-CREATE TABLE invest_profiles_json (
-	profiles JSON
-) COMMENT = 'Таблица инвестиционных профилей в формате JSON';
-
-INSERT INTO invest_profiles_json
-	(profiles)
-VALUES
-('{"name_profile": "Консервативный", "description": "Ваша цель - сохранение и защита капитала. Вы готовы размещать средства только в консервативные инструменты. Доходы предполагаются на уровне или чуть выше существующих процентных ставок по депозитам в соответствующей валюте. Однако доходность носит вероятностный характер, она скорее ожидаемая, чем гарантированная."}'),
-('{"name_profile": "Умеренно консервативный", "description": "Вы готовы принять разумный уровень инвестиционного риска в обмен на потенциальную возможность получить доход на уровне существующих процентных ставок по депозитам +2-5% годовых в рублях или +2-5% в долларах США. В этом случае стоимость капитала может колебаться, а также упасть ниже суммы Ваших первоначальных инвестиций."}'),
-('{"name_profile": "Рациональный", "description": "Вы готовы принять умеренно высокий уровень инвестиционного риска и колебаний стоимости в кратко- и среднесрочной перспективе в обмен на потенциальную возможность получить доход на уровне существующих процентных ставок по депозитам +5-8% годовых в рублях или +5-8% в доллорах США. Стоимость капитала может колебаться, а также упасть ниже сыммы Ваших первоначальных инвестиций."}'),
-('{"name_profile": "Умеренно агрессивный", "description": "Вы готовы принять высокий уровень инвестиционного риска и колебаний стоимости в кратко- и среднесрочной перспективе в обмен на потенциальную возможность получить доход на уровне существующих процентных ставок по депозитам +8-13% годовых в рублях или +8-12% в доллорах США. Стоимость капитала может колебаться, а также упасть ниже суммы Ваших первоначальных инвестиций в течение некоторго периода времени."}'),
-('{"name_profile": "Агрессивный", "description": "Вы готовы принять высокий уровень инвестиционного риска и колебаний стоимости на инвестиционном горизонте в обмен на потенциальную возможность получить доход на уровне существующих процентных ставок по депозитам +13-18% годовых в рублях или +12-16% в доллорах США. Стоимость капитала может колебаться, а также упасть существенно ниже суммы Ваших первоначальных инвестиций на инвестиционном горизонте."}'),
-('{"name_profile": "Сверхагрессивный", "description": "Вы готовы принять крайне высокий уровень инвестиционного  риска и колебаний стоимости на инвестиционном горизонте в обмен на потенциальную возможность получить доход на уровне существующих процентных ставок по депозитам +18% и выше годовых в рублях или +16% и выше в доллорах США. Вы можете самостоятельно определять и контролировать уровень инвестиционного риска и вероятной доходности, но, в случае ряда неудачных решений или сделок, возможно, с использованием плеча и производных финансовых инструментов, Ваши потери могут составлять на уровне 60% от первоначальных инвестиций."}'),
-('{"name_profile": "Профессиональный", "description": "Вы готовы самостоятельно оценивать и контролировать уровень инвестиционных рисков и брать на себя все риски без ограничений, в том числе маржинальные, и, таким образом, осознаёте, что в случае ряда неудачных сделок, возможно с использованием плеча и производных финансовых инструментов, Ваши потери могут составить 100% и даже более от суммы первоначальных инвестиций."}');
-
-SELECT
-	JSON_VALUE(profiles, '$.name_profile') AS profile
-FROM invest_profiles_json;
-*/
+DROP TABLE IF EXISTS deals_json;
 
 CREATE TABLE deals_json (
-	id SERIAL PRIMARY KEY,
-	user_id BIGINT UNSIGNED NOT NULL COMMENT 'ID инвестора',
-	type_of_bid_id TINYINT UNSIGNED NOT NULL COMMENT 'Тип заявки',
-	issuer_id BIGINT UNSIGNED NOT NULL COMMENT 'ID эмитента',
-	info JSON,
-	-- deal ENUM ('buy', 'sell') NOT NULL COMMENT 'Сделка на покупку или продажу',
-	-- quantity INT UNSIGNED NOT NULL COMMENT 'Количество',
-	-- price DECIMAL (11,2) COMMENT 'Цена сделки',
-	currency_id TINYINT UNSIGNED NOT NULL COMMENT 'ID валюты',
-	created_at DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Время совершения сделки',
-	closed ENUM ('yes', 'no') DEFAULT 'no' COMMENT 'Статус сделки (закрыта или нет)',
-	FOREIGN KEY (user_id) REFERENCES users (id),
-	FOREIGN KEY (type_of_bid_id) REFERENCES type_of_bids (id),
-	FOREIGN KEY (issuer_id) REFERENCES issuers (id),
-	FOREIGN KEY (currency_id) REFERENCES currencys (id)
-) COMMENT = 'Таблица сделок с ценными бумагами';
+	info JSON
+	) COMMENT = 'Таблица сделок с ценными бумагами в формате json';
 
 INSERT INTO deals_json
 VALUES 
-(DEFAULT, 1, 2, 3, '{"type": "buy", "quantity": "7", "price": "125"}', 2, DEFAULT, DEFAULT),
-(DEFAULT, 1, 2, 3, '{"type": "buy", "quantity": "23", "price": "14"}', 1, DEFAULT, DEFAULT),
-(DEFAULT, 3, 1, 6, '{"type": "sell", "quantity": "85", "price": "60"}', 1, DEFAULT, DEFAULT),
-(DEFAULT, 1, 1, 2, '{"type": "sell", "quantity": "17", "price": "12"}', 2, DEFAULT, DEFAULT),
-(DEFAULT, 1, 2, 4, '{"type": "buy", "quantity": "9", "price": "15"}', 2, DEFAULT, DEFAULT);
+('{"type": "buy", "quantity": "7", "price": "125"}'),
+('{"type": "buy", "quantity": "23", "price": "14"}'),
+('{"type": "sell", "quantity": "85", "price": "60"}'),
+('{"type": "sell", "quantity": "17", "price": "12"}'),
+('{"type": "buy", "quantity": "9", "price": "15"}');
 
 SELECT * FROM deals_json;
+
+SELECT 
+	info->>'$.type' AS type
+FROM deals_json;
+
+SELECT 
+	JSON_VALUE(info, '$.quantity') AS quantity
+FROM deals_json;
+
+SELECT
+	JSON_VALUE(info, '$.price') AS price
+FROM deals_json;
