@@ -517,5 +517,11 @@ students> db.stud.find({$text: {$search: "Jessika"}})
     ]
   }
 ]
-students> 
+students>
+students> show dbs
+admin      40.00 KiB
+config     96.00 KiB
+local      40.00 KiB
+students  144.00 KiB
+students>  
 
