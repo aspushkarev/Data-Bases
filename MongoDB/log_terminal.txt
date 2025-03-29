@@ -1,0 +1,521 @@
+alexander@MacBook-Pro-Alexander Backup_in_MySQL % brew install mongosh
+==> Downloading https://formulae.brew.sh/api/formula.jws.json
+==> Downloading https://formulae.brew.sh/api/cask.jws.json
+Warning: mongosh 2.4.2 is already installed and up-to-date.
+To reinstall 2.4.2, run:
+  brew reinstall mongosh
+alexander@MacBook-Pro-Alexander Backup_in_MySQL % mongosh "mongodb://localhost:27017"
+Current Mongosh Log ID:	67e7e8a19cf108375bc97a9a
+Connecting to:		mongodb://localhost:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.4.2
+MongoNetworkError: connect ECONNREFUSED 127.0.0.1:27017, connect ECONNREFUSED ::1:27017
+alexander@MacBook-Pro-Alexander Backup_in_MySQL % mongosh
+Current Mongosh Log ID:	67e7e9985390512b11922a37
+Connecting to:		mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.4.2
+MongoNetworkError: connect ECONNREFUSED 127.0.0.1:27017
+alexander@MacBook-Pro-Alexander Backup_in_MySQL % brew services list
+Name              Status  User      File
+mongodb-community none              
+mysql             stopped alexander ~/Library/LaunchAgents/homebrew.mxcl.mysql.plist
+postgresql@15     started alexander ~/Library/LaunchAgents/homebrew.mxcl.postgresql@15.plist
+postgresql@16     none              
+unbound           none              
+alexander@MacBook-Pro-Alexander Backup_in_MySQL % brew services start mongodb-community@8.0
+==> Successfully started `mongodb-community` (label: homebrew.mxcl.mongodb-community)
+alexander@MacBook-Pro-Alexander Backup_in_MySQL % brew services list
+Name              Status  User      File
+mongodb-community started alexander ~/Library/LaunchAgents/homebrew.mxcl.mongodb-community.plist
+mysql             stopped alexander ~/Library/LaunchAgents/homebrew.mxcl.mysql.plist
+postgresql@15     started alexander ~/Library/LaunchAgents/homebrew.mxcl.postgresql@15.plist
+postgresql@16     none              
+unbound           none              
+alexander@MacBook-Pro-Alexander Backup_in_MySQL % ps aux | grep -v grep | grep mongod
+alexander         2570   0,1  0,7 411738208 117040   ??  S     5:46     0:00.79 /opt/homebrew/opt/mongodb-community/bin/mongod --config /opt/homebrew/etc/mongod.conf
+alexander@MacBook-Pro-Alexander Backup_in_MySQL % mongosh
+Current Mongosh Log ID:	67e7ec1455468a3384c291dc
+Connecting to:		mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.4.2
+Using MongoDB:		8.0.6
+Using Mongosh:		2.4.2
+
+For mongosh info see: https://www.mongodb.com/docs/mongodb-shell/
+
+
+To help improve our products, anonymous usage data is collected and sent to MongoDB periodically (https://www.mongodb.com/legal/privacy-policy).
+You can opt-out by running the disableTelemetry() command.
+
+------
+   The server generated these startup warnings when booting
+   2025-03-29T17:46:35.620+05:00: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
+------
+
+test> show dbs
+admin   40.00 KiB
+config  12.00 KiB
+local   40.00 KiB
+test> use students
+switched to db students
+students> db.stats
+db.stats
+
+students> db.createCollection("stud")
+{ ok: 1 }
+students> show dbs
+admin     40.00 KiB
+config    92.00 KiB
+local     40.00 KiB
+students   8.00 KiB
+students> db.stud.insertOne({"_id":0,"name":"aimee Zank","scores":[{"score":1.463179736705023,"type":"exam"},{"score":11.78273309957772,"type":"quiz"},{"score":35.8740349954354,"type":"homework"}]})
+... 
+{ acknowledged: true, insertedId: 0 }
+students> db.stud.find()
+[
+  {
+    _id: 0,
+    name: 'aimee Zank',
+    scores: [
+      { score: 1.463179736705023, type: 'exam' },
+      { score: 11.78273309957772, type: 'quiz' },
+      { score: 35.8740349954354, type: 'homework' }
+    ]
+  }
+]
+students> db.stud.insertMany({"_id":1,"name":"Aurelia Menendez","scores":[{"score":60.06045071030959,"type":"exam"},{"score":52.79790691903873,"type":"quiz"},{"score":71.76133439165544,"type":"homework"}]})
+... {"_id":2,"name":"Corliss Zuk","scores":[{"score":67.03077096065002,"type":"exam"},{"score":6.301851677835235,"type":"quiz"},{"score":66.28344683278382,"type":"homework"}]}
+... {"_id":3,"name":"Bao Ziglar","scores":[{"score":71.64343899778332,"type":"exam"},{"score":24.80221293650313,"type":"quiz"},{"score":42.26147058804812,"type":"homework"}]} 
+... {"_id":4,"name":"Zachary Langlais","scores":[{"score":78.68385091304332,"type":"exam"},{"score":90.2963101368042,"type":"quiz"},{"score":34.41620148042529,"type":"homework"}]}
+... {"_id":5,"name":"Wilburn Spiess","scores":[{"score":44.87186330181261,"type":"exam"},{"score":25.72395114668016,"type":"quiz"},{"score":63.42288310628662,"type":"homework"}]}
+... {"_id":6,"name":"Jenette Flanders","scores":[{"score":37.32285459166097,"type":"exam"},{"score":28.32634976913737,"type":"quiz"},{"score":81.57115318686338,"type":"homework"}]}
+... {"_id":7,"name":"Salena Olmos","scores":[{"score":90.37826509157176,"type":"exam"},{"score":42.48780666956811,"type":"quiz"},{"score":96.52986171633331,"type":"homework"}]}
+... {"_id":8,"name":"Daphne Zheng","scores":[{"score":22.13583712862635,"type":"exam"},{"score":14.63969941335069,"type":"quiz"},{"score":75.94123677556644,"type":"homework"}]}
+... {"_id":9,"name":"Sanda Ryba","scores":[{"score":97.00509953654694,"type":"exam"},{"score":97.80449632538915,"type":"quiz"},{"score":25.27368532432955,"type":"homework"}]} 
+... {"_id":10,"name":"Denisha Cast","scores":[{"score":45.61876862259409,"type":"exam"},{"score":98.35723209418343,"type":"quiz"},{"score":55.90835657173456,"type":"homework"}]}
+... {"_id":11,"name":"Marcus Blohm","scores":[{"score":78.42617835651868,"type":"exam"},{"score":82.58372817930675,"type":"quiz"},{"score":87.49924733328717,"type":"homework"}]}
+... {"_id":12,"name":"Quincy Danaher","scores":[{"score":54.29841278520669,"type":"exam"},{"score":85.61270164694737,"type":"quiz"},{"score":80.40732356118075,"type":"homework"}]}
+... {"_id":13,"name":"Jessika Dagenais","scores":[{"score":90.47179954427436,"type":"exam"},{"score":90.3001402468489,"type":"quiz"},{"score":95.17753772405909,"type":"homework"}]}
+... {"_id":14,"name":"Alix Sherrill","scores":[{"score":25.15924151998215,"type":"exam"},{"score":68.64484047692098,"type":"quiz"},{"score":24.68462152686763,"type":"homework"}]}
+Uncaught:
+SyntaxError: Missing semicolon. (2:6)
+
+  1 | db.stud.insertMany({"_id":1,"name":"Aurelia Menendez","scores":[{"score":60.06045071030959,"type":"exam"},{"score":52.79790691903873,"type":"quiz"},{"score":71.76133439165544,"type":"homework"}]})
+> 2 | {"_id":2,"name":"Corliss Zuk","scores":[{"score":67.03077096065002,"type":"exam"},{"score":6.301851677835235,"type":"quiz"},{"score":66.28344683278382,"type":"homework"}]}
+    |       ^
+  3 | {"_id":3,"name":"Bao Ziglar","scores":[{"score":71.64343899778332,"type":"exam"},{"score":24.80221293650313,"type":"quiz"},{"score":42.26147058804812,"type":"homework"}]}
+  4 | {"_id":4,"name":"Zachary Langlais","scores":[{"score":78.68385091304332,"type":"exam"},{"score":90.2963101368042,"type":"quiz"},{"score":34.41620148042529,"type":"homework"}]}
+  5 | {"_id":5,"name":"Wilburn Spiess","scores":[{"score":44.87186330181261,"type":"exam"},{"score":25.72395114668016,"type":"quiz"},{"score":63.42288310628662,"type":"homework"}]}
+
+students> db.stud.insertMany({"_id":1,"name":"Aurelia Menendez","scores":[{"score":60.06045071030959,"type":"exam"},{"score":52.79790691903873,"type":"quiz"},{"score":71.76133439165544,"type":"homework"}]}
+... {"_id":2,"name":"Corliss Zuk","scores":[{"score":67.03077096065002,"type":"exam"},{"score":6.301851677835235,"type":"quiz"},{"score":66.28344683278382,"type":"homework"}]}
+... {"_id":3,"name":"Bao Ziglar","scores":[{"score":71.64343899778332,"type":"exam"},{"score":24.80221293650313,"type":"quiz"},{"score":42.26147058804812,"type":"homework"}]} 
+... {"_id":4,"name":"Zachary Langlais","scores":[{"score":78.68385091304332,"type":"exam"},{"score":90.2963101368042,"type":"quiz"},{"score":34.41620148042529,"type":"homework"}]}
+... {"_id":5,"name":"Wilburn Spiess","scores":[{"score":44.87186330181261,"type":"exam"},{"score":25.72395114668016,"type":"quiz"},{"score":63.42288310628662,"type":"homework"}]}
+... {"_id":6,"name":"Jenette Flanders","scores":[{"score":37.32285459166097,"type":"exam"},{"score":28.32634976913737,"type":"quiz"},{"score":81.57115318686338,"type":"homework"}]}
+... {"_id":7,"name":"Salena Olmos","scores":[{"score":90.37826509157176,"type":"exam"},{"score":42.48780666956811,"type":"quiz"},{"score":96.52986171633331,"type":"homework"}]}
+... {"_id":8,"name":"Daphne Zheng","scores":[{"score":22.13583712862635,"type":"exam"},{"score":14.63969941335069,"type":"quiz"},{"score":75.94123677556644,"type":"homework"}]}
+... {"_id":9,"name":"Sanda Ryba","scores":[{"score":97.00509953654694,"type":"exam"},{"score":97.80449632538915,"type":"quiz"},{"score":25.27368532432955,"type":"homework"}]} 
+... {"_id":10,"name":"Denisha Cast","scores":[{"score":45.61876862259409,"type":"exam"},{"score":98.35723209418343,"type":"quiz"},{"score":55.90835657173456,"type":"homework"}]}
+... {"_id":11,"name":"Marcus Blohm","scores":[{"score":78.42617835651868,"type":"exam"},{"score":82.58372817930675,"type":"quiz"},{"score":87.49924733328717,"type":"homework"}]}
+... {"_id":12,"name":"Quincy Danaher","scores":[{"score":54.29841278520669,"type":"exam"},{"score":85.61270164694737,"type":"quiz"},{"score":80.40732356118075,"type":"homework"}]}
+... {"_id":13,"name":"Jessika Dagenais","scores":[{"score":90.47179954427436,"type":"exam"},{"score":90.3001402468489,"type":"quiz"},{"score":95.17753772405909,"type":"homework"}]}
+... {"_id":14,"name":"Alix Sherrill","scores":[{"score":25.15924151998215,"type":"exam"},{"score":68.64484047692098,"type":"quiz"},{"score":24.68462152686763,"type":"homework"}]})
+Uncaught:
+SyntaxError: Unexpected token, expected "," (2:0)
+
+  1 | db.stud.insertMany({"_id":1,"name":"Aurelia Menendez","scores":[{"score":60.06045071030959,"type":"exam"},{"score":52.79790691903873,"type":"quiz"},{"score":71.76133439165544,"type":"homework"}]}
+> 2 | {"_id":2,"name":"Corliss Zuk","scores":[{"score":67.03077096065002,"type":"exam"},{"score":6.301851677835235,"type":"quiz"},{"score":66.28344683278382,"type":"homework"}]}
+    | ^
+  3 | {"_id":3,"name":"Bao Ziglar","scores":[{"score":71.64343899778332,"type":"exam"},{"score":24.80221293650313,"type":"quiz"},{"score":42.26147058804812,"type":"homework"}]}
+  4 | {"_id":4,"name":"Zachary Langlais","scores":[{"score":78.68385091304332,"type":"exam"},{"score":90.2963101368042,"type":"quiz"},{"score":34.41620148042529,"type":"homework"}]}
+  5 | {"_id":5,"name":"Wilburn Spiess","scores":[{"score":44.87186330181261,"type":"exam"},{"score":25.72395114668016,"type":"quiz"},{"score":63.42288310628662,"type":"homework"}]}
+
+students> db.stud.find().pretty()
+[
+  {
+    _id: 0,
+    name: 'aimee Zank',
+    scores: [
+      { score: 1.463179736705023, type: 'exam' },
+      { score: 11.78273309957772, type: 'quiz' },
+      { score: 35.8740349954354, type: 'homework' }
+    ]
+  }
+]
+students> db.stud.insertMany({"_id":1,"name":"Aurelia Menendez","scores":[{"score":60.06045071030959,"type":"exam"},{"score":52.79790691903873,"type":"quiz"},{"score":71.76133439165544,"type":"homework"}]}
+... {"_id":2,"name":"Corliss Zuk","scores":[{"score":67.03077096065002,"type":"exam"},{"score":6.301851677835235,"type":"quiz"},{"score":66.28344683278382,"type":"homework"}]}
+... {"_id":3,"name":"Bao Ziglar","scores":[{"score":71.64343899778332,"type":"exam"},{"score":24.80221293650313,"type":"quiz"},{"score":42.26147058804812,"type":"homework"}]} 
+... {"_id":4,"name":"Zachary Langlais","scores":[{"score":78.68385091304332,"type":"exam"},{"score":90.2963101368042,"type":"quiz"},{"score":34.41620148042529,"type":"homework"}]}
+... {"_id":5,"name":"Wilburn Spiess","scores":[{"score":44.87186330181261,"type":"exam"},{"score":25.72395114668016,"type":"quiz"},{"score":63.42288310628662,"type":"homework"}]}
+... {"_id":6,"name":"Jenette Flanders","scores":[{"score":37.32285459166097,"type":"exam"},{"score":28.32634976913737,"type":"quiz"},{"score":81.57115318686338,"type":"homework"}]}
+... {"_id":7,"name":"Salena Olmos","scores":[{"score":90.37826509157176,"type":"exam"},{"score":42.48780666956811,"type":"quiz"},{"score":96.52986171633331,"type":"homework"}]}
+... {"_id":8,"name":"Daphne Zheng","scores":[{"score":22.13583712862635,"type":"exam"},{"score":14.63969941335069,"type":"quiz"},{"score":75.94123677556644,"type":"homework"}]}
+... {"_id":9,"name":"Sanda Ryba","scores":[{"score":97.00509953654694,"type":"exam"},{"score":97.80449632538915,"type":"quiz"},{"score":25.27368532432955,"type":"homework"}]} 
+... {"_id":10,"name":"Denisha Cast","scores":[{"score":45.61876862259409,"type":"exam"},{"score":98.35723209418343,"type":"quiz"},{"score":55.90835657173456,"type":"homework"}]}
+... {"_id":11,"name":"Marcus Blohm","scores":[{"score":78.42617835651868,"type":"exam"},{"score":82.58372817930675,"type":"quiz"},{"score":87.49924733328717,"type":"homework"}]}
+... {"_id":12,"name":"Quincy Danaher","scores":[{"score":54.29841278520669,"type":"exam"},{"score":85.61270164694737,"type":"quiz"},{"score":80.40732356118075,"type":"homework"}]}
+... {"_id":13,"name":"Jessika Dagenais","scores":[{"score":90.47179954427436,"type":"exam"},{"score":90.3001402468489,"type":"quiz"},{"score":95.17753772405909,"type":"homework"}]}
+... {"_id":14,"name":"Alix Sherrill","scores":[{"score":25.15924151998215,"type":"exam"},{"score":68.64484047692098,"type":"quiz"},{"score":24.68462152686763,"type":"homework"}]})
+Uncaught:
+SyntaxError: Unexpected token, expected "," (2:0)
+
+  1 | db.stud.insertMany({"_id":1,"name":"Aurelia Menendez","scores":[{"score":60.06045071030959,"type":"exam"},{"score":52.79790691903873,"type":"quiz"},{"score":71.76133439165544,"type":"homework"}]}
+> 2 | {"_id":2,"name":"Corliss Zuk","scores":[{"score":67.03077096065002,"type":"exam"},{"score":6.301851677835235,"type":"quiz"},{"score":66.28344683278382,"type":"homework"}]}
+    | ^
+  3 | {"_id":3,"name":"Bao Ziglar","scores":[{"score":71.64343899778332,"type":"exam"},{"score":24.80221293650313,"type":"quiz"},{"score":42.26147058804812,"type":"homework"}]}
+  4 | {"_id":4,"name":"Zachary Langlais","scores":[{"score":78.68385091304332,"type":"exam"},{"score":90.2963101368042,"type":"quiz"},{"score":34.41620148042529,"type":"homework"}]}
+  5 | {"_id":5,"name":"Wilburn Spiess","scores":[{"score":44.87186330181261,"type":"exam"},{"score":25.72395114668016,"type":"quiz"},{"score":63.42288310628662,"type":"homework"}]}
+
+students> db.stud.insertMany({"_id":1,"name":"Aurelia Menendez","scores":[{"score":60.06045071030959,"type":"exam"},{"score":52.79790691903873,"type":"quiz"},{"score":71.76133439165544,"type":"homework"}]},
+... {"_id":2,"name":"Corliss Zuk","scores":[{"score":67.03077096065002,"type":"exam"},{"score":6.301851677835235,"type":"quiz"},{"score":66.28344683278382,"type":"homework"}]},
+... {"_id":3,"name":"Bao Ziglar","scores":[{"score":71.64343899778332,"type":"exam"},{"score":24.80221293650313,"type":"quiz"},{"score":42.26147058804812,"type":"homework"}]},
+... {"_id":4,"name":"Zachary Langlais","scores":[{"score":78.68385091304332,"type":"exam"},{"score":90.2963101368042,"type":"quiz"},{"score":34.41620148042529,"type":"homework"}]},
+... {"_id":5,"name":"Wilburn Spiess","scores":[{"score":44.87186330181261,"type":"exam"},{"score":25.72395114668016,"type":"quiz"},{"score":63.42288310628662,"type":"homework"}]},
+... {"_id":6,"name":"Jenette Flanders","scores":[{"score":37.32285459166097,"type":"exam"},{"score":28.32634976913737,"type":"quiz"},{"score":81.57115318686338,"type":"homework"}]},
+... {"_id":7,"name":"Salena Olmos","scores":[{"score":90.37826509157176,"type":"exam"},{"score":42.48780666956811,"type":"quiz"},{"score":96.52986171633331,"type":"homework"}]},
+... {"_id":8,"name":"Daphne Zheng","scores":[{"score":22.13583712862635,"type":"exam"},{"score":14.63969941335069,"type":"quiz"},{"score":75.94123677556644,"type":"homework"}]},
+... {"_id":9,"name":"Sanda Ryba","scores":[{"score":97.00509953654694,"type":"exam"},{"score":97.80449632538915,"type":"quiz"},{"score":25.27368532432955,"type":"homework"}]},
+... {"_id":10,"name":"Denisha Cast","scores":[{"score":45.61876862259409,"type":"exam"},{"score":98.35723209418343,"type":"quiz"},{"score":55.90835657173456,"type":"homework"}]},
+... {"_id":11,"name":"Marcus Blohm","scores":[{"score":78.42617835651868,"type":"exam"},{"score":82.58372817930675,"type":"quiz"},{"score":87.49924733328717,"type":"homework"}]},
+... {"_id":12,"name":"Quincy Danaher","scores":[{"score":54.29841278520669,"type":"exam"},{"score":85.61270164694737,"type":"quiz"},{"score":80.40732356118075,"type":"homework"}]},
+... {"_id":13,"name":"Jessika Dagenais","scores":[{"score":90.47179954427436,"type":"exam"},{"score":90.3001402468489,"type":"quiz"},{"score":95.17753772405909,"type":"homework"}]},
+... {"_id":14,"name":"Alix Sherrill","scores":[{"score":25.15924151998215,"type":"exam"},{"score":68.64484047692098,"type":"quiz"},{"score":24.68462152686763,"type":"homework"}]})
+MongoInvalidArgumentError: Argument "docs" must be an array of documents
+students> db.stud.insert({"_id":1,"name":"Aurelia Menendez","scores":[{"score":60.06045071030959,"type":"exam"},{"score":52.79790691903873,"type":"quiz"},{"score":71.76133439165544,"type":"homework"}]},
+... {"_id":2,"name":"Corliss Zuk","scores":[{"score":67.03077096065002,"type":"exam"},{"score":6.301851677835235,"type":"quiz"},{"score":66.28344683278382,"type":"homework"}]},
+... {"_id":3,"name":"Bao Ziglar","scores":[{"score":71.64343899778332,"type":"exam"},{"score":24.80221293650313,"type":"quiz"},{"score":42.26147058804812,"type":"homework"}]},
+... {"_id":4,"name":"Zachary Langlais","scores":[{"score":78.68385091304332,"type":"exam"},{"score":90.2963101368042,"type":"quiz"},{"score":34.41620148042529,"type":"homework"}]},
+... {"_id":5,"name":"Wilburn Spiess","scores":[{"score":44.87186330181261,"type":"exam"},{"score":25.72395114668016,"type":"quiz"},{"score":63.42288310628662,"type":"homework"}]},
+... {"_id":6,"name":"Jenette Flanders","scores":[{"score":37.32285459166097,"type":"exam"},{"score":28.32634976913737,"type":"quiz"},{"score":81.57115318686338,"type":"homework"}]},
+... {"_id":7,"name":"Salena Olmos","scores":[{"score":90.37826509157176,"type":"exam"},{"score":42.48780666956811,"type":"quiz"},{"score":96.52986171633331,"type":"homework"}]},
+... {"_id":8,"name":"Daphne Zheng","scores":[{"score":22.13583712862635,"type":"exam"},{"score":14.63969941335069,"type":"quiz"},{"score":75.94123677556644,"type":"homework"}]},
+... {"_id":9,"name":"Sanda Ryba","scores":[{"score":97.00509953654694,"type":"exam"},{"score":97.80449632538915,"type":"quiz"},{"score":25.27368532432955,"type":"homework"}]},
+... {"_id":10,"name":"Denisha Cast","scores":[{"score":45.61876862259409,"type":"exam"},{"score":98.35723209418343,"type":"quiz"},{"score":55.90835657173456,"type":"homework"}]},
+... {"_id":11,"name":"Marcus Blohm","scores":[{"score":78.42617835651868,"type":"exam"},{"score":82.58372817930675,"type":"quiz"},{"score":87.49924733328717,"type":"homework"}]},
+... {"_id":12,"name":"Quincy Danaher","scores":[{"score":54.29841278520669,"type":"exam"},{"score":85.61270164694737,"type":"quiz"},{"score":80.40732356118075,"type":"homework"}]},
+... {"_id":13,"name":"Jessika Dagenais","scores":[{"score":90.47179954427436,"type":"exam"},{"score":90.3001402468489,"type":"quiz"},{"score":95.17753772405909,"type":"homework"}]},
+... {"_id":14,"name":"Alix Sherrill","scores":[{"score":25.15924151998215,"type":"exam"},{"score":68.64484047692098,"type":"quiz"},{"score":24.68462152686763,"type":"homework"}]})
+DeprecationWarning: Collection.insert() is deprecated. Use insertOne, insertMany, or bulkWrite.
+{ acknowledged: true, insertedIds: { '0': 1 } }
+students> db.stud.find()
+[
+  {
+    _id: 0,
+    name: 'aimee Zank',
+    scores: [
+      { score: 1.463179736705023, type: 'exam' },
+      { score: 11.78273309957772, type: 'quiz' },
+      { score: 35.8740349954354, type: 'homework' }
+    ]
+  },
+  {
+    _id: 1,
+    name: 'Aurelia Menendez',
+    scores: [
+      { score: 60.06045071030959, type: 'exam' },
+      { score: 52.79790691903873, type: 'quiz' },
+      { score: 71.76133439165544, type: 'homework' }
+    ]
+  }
+]
+students> db.stud.insertMany({"_id":2,"name":"Corliss Zuk","scores":[{"score":67.03077096065002,"type":"exam"},{"score":6.301851677835235,"type":"quiz"},{"score":66.28344683278382,"type":"homework"}]},
+... {"_id":3,"name":"Bao Ziglar","scores":[{"score":71.64343899778332,"type":"exam"},{"score":24.80221293650313,"type":"quiz"},{"score":42.26147058804812,"type":"homework"}]},
+... {"_id":4,"name":"Zachary Langlais","scores":[{"score":78.68385091304332,"type":"exam"},{"score":90.2963101368042,"type":"quiz"},{"score":34.41620148042529,"type":"homework"}]},
+... {"_id":5,"name":"Wilburn Spiess","scores":[{"score":44.87186330181261,"type":"exam"},{"score":25.72395114668016,"type":"quiz"},{"score":63.42288310628662,"type":"homework"}]},
+... {"_id":6,"name":"Jenette Flanders","scores":[{"score":37.32285459166097,"type":"exam"},{"score":28.32634976913737,"type":"quiz"},{"score":81.57115318686338,"type":"homework"}]},
+... {"_id":7,"name":"Salena Olmos","scores":[{"score":90.37826509157176,"type":"exam"},{"score":42.48780666956811,"type":"quiz"},{"score":96.52986171633331,"type":"homework"}]},
+... {"_id":8,"name":"Daphne Zheng","scores":[{"score":22.13583712862635,"type":"exam"},{"score":14.63969941335069,"type":"quiz"},{"score":75.94123677556644,"type":"homework"}]},
+... {"_id":9,"name":"Sanda Ryba","scores":[{"score":97.00509953654694,"type":"exam"},{"score":97.80449632538915,"type":"quiz"},{"score":25.27368532432955,"type":"homework"}]},
+... {"_id":10,"name":"Denisha Cast","scores":[{"score":45.61876862259409,"type":"exam"},{"score":98.35723209418343,"type":"quiz"},{"score":55.90835657173456,"type":"homework"}]},
+... {"_id":11,"name":"Marcus Blohm","scores":[{"score":78.42617835651868,"type":"exam"},{"score":82.58372817930675,"type":"quiz"},{"score":87.49924733328717,"type":"homework"}]},
+... {"_id":12,"name":"Quincy Danaher","scores":[{"score":54.29841278520669,"type":"exam"},{"score":85.61270164694737,"type":"quiz"},{"score":80.40732356118075,"type":"homework"}]},
+... {"_id":13,"name":"Jessika Dagenais","scores":[{"score":90.47179954427436,"type":"exam"},{"score":90.3001402468489,"type":"quiz"},{"score":95.17753772405909,"type":"homework"}]},
+... {"_id":14,"name":"Alix Sherrill","scores":[{"score":25.15924151998215,"type":"exam"},{"score":68.64484047692098,"type":"quiz"},{"score":24.68462152686763,"type":"homework"}]})
+MongoInvalidArgumentError: Argument "docs" must be an array of documents
+students> db.stud.find()
+[
+  {
+    _id: 0,
+    name: 'aimee Zank',
+    scores: [
+      { score: 1.463179736705023, type: 'exam' },
+      { score: 11.78273309957772, type: 'quiz' },
+      { score: 35.8740349954354, type: 'homework' }
+    ]
+  },
+  {
+    _id: 1,
+    name: 'Aurelia Menendez',
+    scores: [
+      { score: 60.06045071030959, type: 'exam' },
+      { score: 52.79790691903873, type: 'quiz' },
+      { score: 71.76133439165544, type: 'homework' }
+    ]
+  }
+]
+students> db.stud.insertMany([{"_id":2,"name":"Corliss Zuk","scores":[{"score":67.03077096065002,"type":"exam"},{"score":6.301851677835235,"type":"quiz"},{"score":66.28344683278382,"type":"homework"}]},
+... {"_id":3,"name":"Bao Ziglar","scores":[{"score":71.64343899778332,"type":"exam"},{"score":24.80221293650313,"type":"quiz"},{"score":42.26147058804812,"type":"homework"}]},
+... {"_id":4,"name":"Zachary Langlais","scores":[{"score":78.68385091304332,"type":"exam"},{"score":90.2963101368042,"type":"quiz"},{"score":34.41620148042529,"type":"homework"}]},
+... {"_id":5,"name":"Wilburn Spiess","scores":[{"score":44.87186330181261,"type":"exam"},{"score":25.72395114668016,"type":"quiz"},{"score":63.42288310628662,"type":"homework"}]},
+... {"_id":6,"name":"Jenette Flanders","scores":[{"score":37.32285459166097,"type":"exam"},{"score":28.32634976913737,"type":"quiz"},{"score":81.57115318686338,"type":"homework"}]},
+... {"_id":7,"name":"Salena Olmos","scores":[{"score":90.37826509157176,"type":"exam"},{"score":42.48780666956811,"type":"quiz"},{"score":96.52986171633331,"type":"homework"}]},
+... {"_id":8,"name":"Daphne Zheng","scores":[{"score":22.13583712862635,"type":"exam"},{"score":14.63969941335069,"type":"quiz"},{"score":75.94123677556644,"type":"homework"}]},
+... {"_id":9,"name":"Sanda Ryba","scores":[{"score":97.00509953654694,"type":"exam"},{"score":97.80449632538915,"type":"quiz"},{"score":25.27368532432955,"type":"homework"}]},
+... {"_id":10,"name":"Denisha Cast","scores":[{"score":45.61876862259409,"type":"exam"},{"score":98.35723209418343,"type":"quiz"},{"score":55.90835657173456,"type":"homework"}]},
+... {"_id":11,"name":"Marcus Blohm","scores":[{"score":78.42617835651868,"type":"exam"},{"score":82.58372817930675,"type":"quiz"},{"score":87.49924733328717,"type":"homework"}]},
+... {"_id":12,"name":"Quincy Danaher","scores":[{"score":54.29841278520669,"type":"exam"},{"score":85.61270164694737,"type":"quiz"},{"score":80.40732356118075,"type":"homework"}]},
+... {"_id":13,"name":"Jessika Dagenais","scores":[{"score":90.47179954427436,"type":"exam"},{"score":90.3001402468489,"type":"quiz"},{"score":95.17753772405909,"type":"homework"}]},
+... {"_id":14,"name":"Alix Sherrill","scores":[{"score":25.15924151998215,"type":"exam"},{"score":68.64484047692098,"type":"quiz"},{"score":24.68462152686763,"type":"homework"}]}])
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': 2,
+    '1': 3,
+    '2': 4,
+    '3': 5,
+    '4': 6,
+    '5': 7,
+    '6': 8,
+    '7': 9,
+    '8': 10,
+    '9': 11,
+    '10': 12,
+    '11': 13,
+    '12': 14
+  }
+}
+students> db.stud.find().pretty()
+[
+  {
+    _id: 0,
+    name: 'aimee Zank',
+    scores: [
+      { score: 1.463179736705023, type: 'exam' },
+      { score: 11.78273309957772, type: 'quiz' },
+      { score: 35.8740349954354, type: 'homework' }
+    ]
+  },
+  {
+    _id: 1,
+    name: 'Aurelia Menendez',
+    scores: [
+      { score: 60.06045071030959, type: 'exam' },
+      { score: 52.79790691903873, type: 'quiz' },
+      { score: 71.76133439165544, type: 'homework' }
+    ]
+  },
+  {
+    _id: 2,
+    name: 'Corliss Zuk',
+    scores: [
+      { score: 67.03077096065002, type: 'exam' },
+      { score: 6.301851677835235, type: 'quiz' },
+      { score: 66.28344683278382, type: 'homework' }
+    ]
+  },
+  {
+    _id: 3,
+    name: 'Bao Ziglar',
+    scores: [
+      { score: 71.64343899778332, type: 'exam' },
+      { score: 24.80221293650313, type: 'quiz' },
+      { score: 42.26147058804812, type: 'homework' }
+    ]
+  },
+  {
+    _id: 4,
+    name: 'Zachary Langlais',
+    scores: [
+      { score: 78.68385091304332, type: 'exam' },
+      { score: 90.2963101368042, type: 'quiz' },
+      { score: 34.41620148042529, type: 'homework' }
+    ]
+  },
+  {
+    _id: 5,
+    name: 'Wilburn Spiess',
+    scores: [
+      { score: 44.87186330181261, type: 'exam' },
+      { score: 25.72395114668016, type: 'quiz' },
+      { score: 63.42288310628662, type: 'homework' }
+    ]
+  },
+  {
+    _id: 6,
+    name: 'Jenette Flanders',
+    scores: [
+      { score: 37.32285459166097, type: 'exam' },
+      { score: 28.32634976913737, type: 'quiz' },
+      { score: 81.57115318686338, type: 'homework' }
+    ]
+  },
+  {
+    _id: 7,
+    name: 'Salena Olmos',
+    scores: [
+      { score: 90.37826509157176, type: 'exam' },
+      { score: 42.48780666956811, type: 'quiz' },
+      { score: 96.52986171633331, type: 'homework' }
+    ]
+  },
+  {
+    _id: 8,
+    name: 'Daphne Zheng',
+    scores: [
+      { score: 22.13583712862635, type: 'exam' },
+      { score: 14.63969941335069, type: 'quiz' },
+      { score: 75.94123677556644, type: 'homework' }
+    ]
+  },
+  {
+    _id: 9,
+    name: 'Sanda Ryba',
+    scores: [
+      { score: 97.00509953654694, type: 'exam' },
+      { score: 97.80449632538915, type: 'quiz' },
+      { score: 25.27368532432955, type: 'homework' }
+    ]
+  },
+  {
+    _id: 10,
+    name: 'Denisha Cast',
+    scores: [
+      { score: 45.61876862259409, type: 'exam' },
+      { score: 98.35723209418343, type: 'quiz' },
+      { score: 55.90835657173456, type: 'homework' }
+    ]
+  },
+  {
+    _id: 11,
+    name: 'Marcus Blohm',
+    scores: [
+      { score: 78.42617835651868, type: 'exam' },
+      { score: 82.58372817930675, type: 'quiz' },
+      { score: 87.49924733328717, type: 'homework' }
+    ]
+  },
+  {
+    _id: 12,
+    name: 'Quincy Danaher',
+    scores: [
+      { score: 54.29841278520669, type: 'exam' },
+      { score: 85.61270164694737, type: 'quiz' },
+      { score: 80.40732356118075, type: 'homework' }
+    ]
+  },
+  {
+    _id: 13,
+    name: 'Jessika Dagenais',
+    scores: [
+      { score: 90.47179954427436, type: 'exam' },
+      { score: 90.3001402468489, type: 'quiz' },
+      { score: 95.17753772405909, type: 'homework' }
+    ]
+  },
+  {
+    _id: 14,
+    name: 'Alix Sherrill',
+    scores: [
+      { score: 25.15924151998215, type: 'exam' },
+      { score: 68.64484047692098, type: 'quiz' },
+      { score: 24.68462152686763, type: 'homework' }
+    ]
+  }
+]
+students> db.stud.find({"name":{$regex:"J"}})
+[
+  {
+    _id: 6,
+    name: 'Jenette Flanders',
+    scores: [
+      { score: 37.32285459166097, type: 'exam' },
+      { score: 28.32634976913737, type: 'quiz' },
+      { score: 81.57115318686338, type: 'homework' }
+    ]
+  },
+  {
+    _id: 13,
+    name: 'Jessika Dagenais',
+    scores: [
+      { score: 90.47179954427436, type: 'exam' },
+      { score: 90.3001402468489, type: 'quiz' },
+      { score: 95.17753772405909, type: 'homework' }
+    ]
+  }
+]
+students> 
+
+students> 
+
+students> db.stud.createIndex({"name"})
+Uncaught:
+SyntaxError: Unexpected token (1:27)
+
+> 1 | db.stud.createIndex({"name"})
+    |                            ^
+  2 |
+
+students> db.stud.createIndex({"name": A})
+ReferenceError: A is not defined
+students> db.stud.createIndex({"name": 1})
+name_1
+students> db.stud.find({$name: "Jessika"})
+MongoServerError[BadValue]: unknown top level operator: $name. If you have a field name that starts with a '$' symbol, consider using $getField or $setField.
+students> db.stud.find({$name: {$search: "Jessika"}})
+MongoServerError[BadValue]: unknown top level operator: $name. If you have a field name that starts with a '$' symbol, consider using $getField or $setField.
+students> db.stud.find({$text: {$search: "Jessika"}})
+MongoServerError[IndexNotFound]: text index required for $text query
+students> db.stud.find({$name_1: {$search: "Jessika"}})
+MongoServerError[BadValue]: unknown top level operator: $name_1. If you have a field name that starts with a '$' symbol, consider using $getField or $setField.
+students> db.stud.createIndex({"name": "text"})
+name_text
+students> db.stud.find({$text: {$search: "Jessika"}})
+[
+  {
+    _id: 13,
+    name: 'Jessika Dagenais',
+    scores: [
+      { score: 90.47179954427436, type: 'exam' },
+      { score: 90.3001402468489, type: 'quiz' },
+      { score: 95.17753772405909, type: 'homework' }
+    ]
+  }
+]
+students> db.stud.distinct("name")
+[
+  'Alix Sherrill',    'Aurelia Menendez',
+  'Bao Ziglar',       'Corliss Zuk',
+  'Daphne Zheng',     'Denisha Cast',
+  'Jenette Flanders', 'Jessika Dagenais',
+  'Marcus Blohm',     'Quincy Danaher',
+  'Salena Olmos',     'Sanda Ryba',
+  'Wilburn Spiess',   'Zachary Langlais',
+  'aimee Zank'
+]
+students> db.stud.update({"_id":13}, {$set: {"name": Jessika Dagenaiz}})
+Uncaught:
+SyntaxError: Unexpected token, expected "," (1:51)
+
+> 1 | db.stud.update({"_id":13}, {$set: {"name": Jessika Dagenaiz}})
+    |                                                    ^
+  2 |
+
+students> db.stud.update({"_id":13}, {$set: {"name": "Jessika Dagenaiz"}})
+DeprecationWarning: Collection.update() is deprecated. Use updateOne, updateMany, or bulkWrite.
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+students> db.stud.find({$text: {$search: "Jessika"}})
+[
+  {
+    _id: 13,
+    name: 'Jessika Dagenaiz',
+    scores: [
+      { score: 90.47179954427436, type: 'exam' },
+      { score: 90.3001402468489, type: 'quiz' },
+      { score: 95.17753772405909, type: 'homework' }
+    ]
+  }
+]
+students> 
+
