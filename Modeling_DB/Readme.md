@@ -16,4 +16,7 @@
 - `customer_dump_with_data.sql`\
   Дамп базы данных с данными
 
+- `Schema_customers.pdf`\
+Схема базы данных.<br> customers_all - изначальная (неправильная) таблица. Все остальные таблицы в схеме - это сущности, которые я выделил увидев их в ТЗ.
+
 Ссылка на схему [dbdiagram](https://dbdiagram.io/d/67eeb2aa4f7afba184424951)
