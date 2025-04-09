@@ -1,0 +1,62 @@
+services:
+  pg-1:
+    container_name: pg-1
+    image: docker.io/bitnami/postgresql-repmgr:latest
+    ports:
+      - "30432:5432"
+    volumes:
+      - pg_1_data:/bitnami/postgresql
+    environment:
+      - POSTGRESQL_POSTGRES_PASSWORD=adminS1cret!13
+      - POSTGRESQL_USERNAME=postgres
+      - POSTGRESQL_PASSWORD=My:s3Cr3t/
+      - POSTGRESQL_DATABASE=postgres
+      - REPMGR_PASSWORD=repmgrpassword
+      - REPMGR_PRIMARY_HOST=pg-1
+      - REPMGR_PRIMARY_PORT=5432
+      - REPMGR_PARTNER_NODES=pg-1,pg-2:5432
+      - REPMGR_NODE_NAME=pg-1
+      - REPMGR_NODE_NETWORK_NAME=pg-1
+      - REPMGR_PORT_NUMBER=5432
+      - REPMGR_CONNECT_TIMEOUT=1
+      - REPMGR_RECONNECT_ATTEMPTS=2
+      - REPMGR_RECONNECT_INTERVAL=1
+      - REPMGR_MASTER_RESPONSE_TIMEOUT=5
+    restart: unless-stopped
+    networks:
+      - postgres-network
+
+  pg-2:
+    container_name: pg-2
+    image: docker.io/bitnami/postgresql-repmgr:latest
+    ports:
+      - "30433:5432"
+    volumes:
+      - pg_2_data:/bitnami/postgresql
+    environment:
+      - POSTGRESQL_POSTGRES_PASSWORD=adminS1cret!13
+      - POSTGRESQL_USERNAME=postgres
+      - POSTGRESQL_PASSWORD=My:s3Cr3t/
+      - POSTGRESQL_DATABASE=postgres
+      - REPMGR_PASSWORD=repmgrpassword
+      - REPMGR_PRIMARY_HOST=pg-1
+      - REPMGR_PRIMARY_PORT=5432
+      - REPMGR_PARTNER_NODES=pg-1,pg-2:5432
+      - REPMGR_NODE_NAME=pg-2
+      - REPMGR_NODE_NETWORK_NAME=pg-2
+      - REPMGR_PORT_NUMBER=5432
+      - REPMGR_CONNECT_TIMEOUT=1
+      - REPMGR_RECONNECT_ATTEMPTS=2
+      - REPMGR_RECONNECT_INTERVAL=1
+      - REPMGR_MASTER_RESPONSE_TIMEOUT=5
+    restart: unless-stopped
+    networks:
+      - postgres-network
+
+networks:
+  postgres-network:
+    driver: bridge
+
+volumes:
+  pg_1_data:
+  pg_2_data:
